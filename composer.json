@@ -1,0 +1,16 @@
+{
+    "name": "ivan/media-nation",
+    "description": "Тестовое задание",
+    "authors": [
+        {
+            "name": "Ivan Nikiforov",
+            "email": "vanassmeister@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Nikiforov\\": "Nikiforov"
+        }
+    }
+}

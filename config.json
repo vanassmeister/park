@@ -1,0 +1,27 @@
+{
+  "park": {
+    "places": 30
+  },
+  "drivers": [
+    {
+      "type": "default"
+    },
+    {
+      "type": "pro"
+    }
+  ],
+  "cars": [
+    {
+      "km": 28324,
+      "brand": "Homba"
+    },
+    {
+      "km": 14598,
+      "brand": "Luda"
+    },
+    {
+      "km": 54934,
+      "brand": "Hendai"
+    }
+  ]
+}
