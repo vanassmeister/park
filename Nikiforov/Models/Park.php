@@ -10,6 +10,7 @@ namespace Nikiforov\Models;
 
 use Nikiforov\Interfaces\CarInterface;
 use Nikiforov\Interfaces\ParkItemInterface;
+use Nikiforov\Models\Cars\BaseCar;
 
 /**
  * Class Park
@@ -74,9 +75,14 @@ class Park
     /**
      * Добавить авто
      * @param CarInterface $car
+     * @throws \Exception
      */
     public function addCar(CarInterface $car)
     {
+        if (count($this->cars) == $this->places) {
+            throw new \Exception("No place to add Car");
+        }
+
         $id = ++$this->carsCounter;
 
         /** @var ParkItemInterface $car */
@@ -102,6 +108,9 @@ class Park
      */
     public function removeCar($carId)
     {
+        /** @var BaseCar $car */
+        $car = $this->cars[$carId];
+        $car->setDriver(null);
         unset($this->cars[$carId]);
     }
 
@@ -113,6 +122,7 @@ class Park
     {
         /** @var Driver $driver */
         $driver = $this->drivers[$driverId];
+        $driver->setCar(null);
         $driver->setPark(null);
         unset($this->drivers[$driverId]);
     }
@@ -154,6 +164,10 @@ class Park
     private function assignDriversToCars()
     {
         foreach ($this->drivers as $driver) {
+            if ($driver->getCar()) {
+                continue;
+            }
+
             $car = $this->getCarForRent();
             if (!$car) {
                 // машин нет
@@ -175,18 +189,17 @@ class Park
 
     /**
      * Имитирует рабочий день таксопарка
-     * @param $date
+     * @param int $date
      * @throws \Exception
      */
     public function work($date)
     {
-        $this->setDate($date);
+        $this->date = $date;
         $this->assignDriversToCars();
-        $this->report->saveBefore();
         foreach ($this->drivers as $driver) {
             $driver->completeOrders();
         }
-        $this->report->printDailyStats();
+
     }
 
     /**
@@ -195,14 +208,6 @@ class Park
     public function getDate()
     {
         return $this->date;
-    }
-
-    /**
-     * @param string $date
-     */
-    public function setDate($date)
-    {
-        $this->date = $date;
     }
 
     /**
@@ -219,5 +224,13 @@ class Park
     public function getDrivers()
     {
         return $this->drivers;
+    }
+
+    /**
+     * @return Report
+     */
+    public function getReport()
+    {
+        return $this->report;
     }
 }

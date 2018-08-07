@@ -49,6 +49,18 @@ class BaseCar implements ParkItemInterface, CarInterface
     private $fuelConsumed = 0;
 
     /**
+     * Дата проверки на случайную неисправность
+     * @var int
+     */
+    private $randomMalfunctionCheckDate;
+
+    /**
+     * Количество поломок
+     * @var int
+     */
+    private $malfunctionCount = 0;
+
+    /**
      * Car constructor.
      * @param $km
      */
@@ -132,16 +144,10 @@ class BaseCar implements ParkItemInterface, CarInterface
             if ($date >= $this->inRepairUntilTime) {
                 // машина готова, забираем из ремонта
                 $this->inRepairUntilTime = null;
+                echo "\t" . $this->getId() . ' ' . $this->getBrand() . " restored\n";
                 return false;
             }
             return  true;
-        }
-
-        // машина вдруг сломалась?
-        if ($this->randomMalfunction()) {
-            // ставим в ремонт на 3 дня
-            $this->inRepairUntilTime = strtotime('+ 3 days', $date);
-            return true;
         }
         return false;
     }
@@ -167,13 +173,48 @@ class BaseCar implements ParkItemInterface, CarInterface
 
     /**
      * Случайная неисправность
+     * @param int $date - дата проверки, unix timestamp
      * @return bool
      */
-    private function randomMalfunction()
+    public function randomMalfunction($date)
     {
-        $max = floor($this->getRiskPercent() / 1000);
-        $rand = mt_rand(0, 1000);
+        // испытываем судьбу только один раз в день
+        if ($this->randomMalfunctionCheckDate == $date) {
+            return false;
+        }
 
-        return $rand >= 0 && $rand <= $max;
+        $max = round($this->getRiskPercent());
+        $rand = mt_rand(0, 100);
+
+        // машина вдруг сломалась?
+        if ($rand >= 0 && $rand <= $max) {
+            // ставим в ремонт на 3 дня
+            echo "\t" . $this->getId() . ' ' . $this->getBrand() . " broken\n";
+            ++$this->malfunctionCount;
+            $this->inRepairUntilTime = strtotime('+ 3 days', $date);
+            return true;
+        }
+
+        $this->randomMalfunctionCheckDate = $date;
+        return false;
+    }
+
+    /**
+     * Возвращает бренд
+     * @return mixed
+     */
+    public function getBrand()
+    {
+        $class = get_class($this);
+        $classParts = explode('\\', $class);
+        return array_pop($classParts);
+    }
+
+    /**
+     * @return int
+     */
+    public function getMalfunctionCount()
+    {
+        return $this->malfunctionCount;
     }
 }

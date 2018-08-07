@@ -7,6 +7,9 @@
       "type": "default"
     },
     {
+      "type": "default"
+    },
+    {
       "type": "pro"
     }
   ],
@@ -20,7 +23,7 @@
       "brand": "Luda"
     },
     {
-      "km": 54934,
+      "km": 5000,
       "brand": "Hendai"
     }
   ]

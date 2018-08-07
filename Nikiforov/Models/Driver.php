@@ -134,20 +134,20 @@ class Driver implements ParkItemInterface
     public function completeOrder($km)
     {
         if (!$this->car) {
-            throw new \Exception("No car assigned to driver");
+            return;
         }
 
         // заводим машину
-        if ($this->car->getIsBroken($this->park->getDate())) {
-            // не заводится
+        if ($this->car->randomMalfunction($this->park->getDate())) {
+            // не заводится, пробуем взять другую
             $this->releaseCar();
-
-            // пробуем взять другую
             $newCar = $this->park->getCarForRent();
             if ($newCar) {
                 $this->setCar($newCar);
                 $this->completeOrder($km);
             }
+
+            return;
         }
 
         // едем

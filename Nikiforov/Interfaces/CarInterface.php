@@ -51,4 +51,23 @@ interface CarInterface
      * @return mixed
      */
     public function ride($km);
+
+    /**
+     * Возвращает бренд автомобиля
+     * @return string
+     */
+    public function getBrand();
+
+    /**
+     * Случайная неисправность
+     * @param int $date, дата проверки, unix timestamp
+     * @return bool
+     */
+    public function randomMalfunction($date);
+
+    /**
+     * Число поломок
+     * @return int
+     */
+    public function getMalfunctionCount();
 }

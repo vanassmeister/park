@@ -8,9 +8,10 @@
 
 namespace Nikiforov\Models;
 
-use Nikiforov\Interfaces\CarInterface;
-
-
+/**
+ * Class Report
+ * @package Nikiforov\Models
+ */
 class Report
 {
     /**
@@ -18,18 +19,6 @@ class Report
      * @var Park
      */
     private $park;
-
-    /**
-     * Копия состояния автомобилей на начало рабочего дня
-     * @var CarInterface[]
-     */
-    private $cars;
-
-    /**
-     * Число выполенных заказов у водителя на начало рабочего дня
-     * @var int[]
-     */
-    private $drivers;
 
     /**
      * @param Park $park
@@ -40,48 +29,35 @@ class Report
     }
 
     /**
-     * Сохраняет показатели до начала рабочего дня
+     * Вывод статистики
      */
-    public function saveBefore()
+    public  function printStats()
     {
+        echo "\n*** Cars ***\n\n";
+        echo "ID\tBrand\tBroken\tFuel\tKm\n";
+        echo str_repeat('-', 40), PHP_EOL;
+
         foreach ($this->park->getCars() as $carId => $car) {
-            $this->cars[$carId] = clone $car;
-        }
-
-        foreach ($this->park->getDrivers() as $driverId => $driver) {
-            $this->drivers[$driverId] = $driver->getOrderCount();
-        }
-    }
-
-    /**
-     * Вывод ежедневной статистики
-     */
-    public  function printDailyStats()
-    {
-        $date = $this->park->getDate();
-        echo "Stats for $date\n";
-
-        echo "Cars\n";
-        foreach ($this->park->getCars() as $carId => $car) {
-            /** @var CarInterface $oldCar */
-            $oldCar = $this->cars[$carId];
             $row = [
                 $carId,
-                get_class($car),
-                $car->getIsBroken($date),
-                $car->getFuelConsumed() - $oldCar->getFuelConsumed(),
-                $car->getKm() - $oldCar->getKm(),
+                $car->getBrand(),
+                $car->getMalfunctionCount(),
+                $car->getFuelConsumed(),
+                $car->getKm(),
             ];
 
             $this->echoRow($row);
         }
 
-        echo "Drivers\n";
+        echo "\n*** Drivers ***\n\n";
+        echo "ID\tType\tOrders\n";
+        echo str_repeat('-', 40), PHP_EOL;
+
         foreach ($this->park->getDrivers() as $driverId => $driver) {
             $row = [
                 $driverId,
                 $driver->getType(),
-                $driver->getOrderCount() - $this->drivers[$driverId]
+                $driver->getOrderCount()
             ];
 
             $this->echoRow($row);

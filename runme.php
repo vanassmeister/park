@@ -15,14 +15,10 @@ use Nikiforov\Models\Cars\Luda;
 use Nikiforov\Models\Cars\Homba;
 use Nikiforov\Models\Cars\Hendai;
 
-/**
- * @throws Exception
- */
-function simulate()
-{
-    $configFile = 'config.json';
-    $config = json_decode(file_get_contents($configFile));
+$configFile = 'config.json';
+$config = json_decode(file_get_contents($configFile));
 
+try {
     $report = new Report();
     $park = new Park($config->park->places, $report);
 
@@ -49,11 +45,17 @@ function simulate()
         $park->addDriver($driver);
     }
 
-    $park->work('2018-08-07');
-}
+    $date = time();
+    // моделируем несколько дней работы
+    for ($i = 0; $i < 10; ++$i) {
+        $dateFormatted = date('Y-m-d', $date);
+        echo "Working day $dateFormatted\n";
+        $park->work($date);
+        $date = strtotime('+ 1 day', $date);
+    }
 
-try {
-    simulate();
+    $park->getReport()->printStats();
+
 } catch (\Exception $exception) {
     echo $exception->getMessage(), PHP_EOL;
 }
