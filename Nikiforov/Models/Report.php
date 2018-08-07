@@ -21,9 +21,10 @@ class Report
     private $park;
 
     /**
+     * Report constructor.
      * @param Park $park
      */
-    public function setPark($park)
+    public function __construct(Park $park)
     {
         $this->park = $park;
     }

@@ -7,7 +7,9 @@
             "email": "vanassmeister@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "ext-json": "*"
+    },
     "autoload": {
         "psr-4": {
             "Nikiforov\\": "Nikiforov"

@@ -49,27 +49,19 @@ class Park
     private $driversCounter = 0;
 
     /**
-     * Дата
-     * @var string
+     * Дата текущей смены
+     * @var int
      */
     private $date;
 
     /**
-     * Отчет
-     * @var Report
-     */
-    private $report;
-
-    /**
      * Park constructor.
      * @param int $places
-     * @param Report $report
      */
-    public function __construct($places, Report $report)
+    public function __construct($places)
     {
         $this->places = $places;
-        $this->report = $report;
-        $report->setPark($this);
+        $this->date = time();
     }
 
     /**
@@ -122,7 +114,7 @@ class Park
     {
         /** @var Driver $driver */
         $driver = $this->drivers[$driverId];
-        $driver->setCar(null);
+        $driver->releaseCar();
         $driver->setPark(null);
         unset($this->drivers[$driverId]);
     }
@@ -140,7 +132,9 @@ class Park
      */
     public function removePlace()
     {
-        --$this->places;
+        if ($this->places > 0) {
+            --$this->places;
+        }
     }
 
     /**
@@ -161,7 +155,7 @@ class Park
     /**
      * Назначить машины водителям
      */
-    private function assignDriversToCars()
+    public function assignDriversToCars()
     {
         foreach ($this->drivers as $driver) {
             if ($driver->getCar()) {
@@ -190,7 +184,6 @@ class Park
     /**
      * Имитирует рабочий день таксопарка
      * @param int $date
-     * @throws \Exception
      */
     public function work($date)
     {
@@ -203,11 +196,19 @@ class Park
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * @param int $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
     }
 
     /**
@@ -227,10 +228,10 @@ class Park
     }
 
     /**
-     * @return Report
+     * @return int
      */
-    public function getReport()
+    public function getPlaces()
     {
-        return $this->report;
+        return $this->places;
     }
 }

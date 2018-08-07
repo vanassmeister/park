@@ -2,6 +2,10 @@
     <testsuites>
         <testsuite name="park">
             <file>tests/BaseCarTest.php</file>
+            <file>tests/HombaTest.php</file>
+            <file>tests/LudaTest.php</file>
+            <file>tests/DriverTest.php</file>
+            <file>tests/ParkTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

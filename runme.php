@@ -19,8 +19,8 @@ $configFile = 'config.json';
 $config = json_decode(file_get_contents($configFile));
 
 try {
-    $report = new Report();
-    $park = new Park($config->park->places, $report);
+
+    $park = new Park($config->park->places);
 
     foreach ($config->cars as $carConfig) {
         switch ($carConfig->brand) {
@@ -45,16 +45,17 @@ try {
         $park->addDriver($driver);
     }
 
+    $report = new Report($park);
+
     $date = time();
     // моделируем несколько дней работы
     for ($i = 0; $i < 10; ++$i) {
         $dateFormatted = date('Y-m-d', $date);
-        echo "Working day $dateFormatted\n";
         $park->work($date);
         $date = strtotime('+ 1 day', $date);
     }
 
-    $park->getReport()->printStats();
+    $report->printStats();
 
 } catch (\Exception $exception) {
     echo $exception->getMessage(), PHP_EOL;

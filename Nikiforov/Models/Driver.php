@@ -129,7 +129,6 @@ class Driver implements ParkItemInterface
     /**
      * Выполнить заказ
      * @param int $km дистанция
-     * @throws \Exception
      */
     public function completeOrder($km)
     {
@@ -157,17 +156,24 @@ class Driver implements ParkItemInterface
 
     /**
      * Имитирует рабочий день водителя
-     * @throws \Exception
      */
     public function completeOrders()
     {
         // профи могут выполнять на 30% больше заказов
-        $ordersCount = $this->type == self::TYPE_PRO ? 13 : 10;
+        $ordersCount = $this->getOrderCapability();
 
         for ($i = 0; $i < $ordersCount; ++$i) {
             $km = $this->park->getOrderKm();
             $this->completeOrder($km);
         }
+    }
+
+    /**
+     * @return Park
+     */
+    public function getPark()
+    {
+        return $this->park;
     }
 
     /**
@@ -192,5 +198,14 @@ class Driver implements ParkItemInterface
     public function getOrderCount()
     {
         return $this->orderCount;
+    }
+
+    /**
+     * Предельное число заказов в сутки
+     * @return int
+     */
+    public function getOrderCapability()
+    {
+        return $this->type == self::TYPE_PRO ? 13 : 10;
     }
 }

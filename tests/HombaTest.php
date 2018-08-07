@@ -7,11 +7,22 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Nikiforov\Models\Cars\Homba;
 
 class HombaTest extends TestCase
 {
-    public function testSomeAction()
-    {
+    /**
+     * @var Homba
+     */
+    protected $homba;
 
+    public function setUp()
+    {
+        $this->homba = new Homba(5000);
+    }
+
+    public function testLitersPerHundredKilometers()
+    {
+        $this->assertEquals(7, $this->homba->getLitersPerHundredKilometers());
     }
 }
