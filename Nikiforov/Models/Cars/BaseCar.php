@@ -144,7 +144,6 @@ class BaseCar implements ParkItemInterface, CarInterface
             if ($date >= $this->inRepairUntilTime) {
                 // машина готова, забираем из ремонта
                 $this->inRepairUntilTime = null;
-                echo "\t" . $this->getId() . ' ' . $this->getBrand() . " restored\n";
                 return false;
             }
             return  true;
@@ -189,7 +188,6 @@ class BaseCar implements ParkItemInterface, CarInterface
         // машина вдруг сломалась?
         if ($rand >= 0 && $rand <= $max) {
             // ставим в ремонт на 3 дня
-            echo "\t" . $this->getId() . ' ' . $this->getBrand() . " broken\n";
             ++$this->malfunctionCount;
             $this->inRepairUntilTime = strtotime('+ 3 days', $date);
             return true;

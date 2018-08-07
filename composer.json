@@ -12,5 +12,8 @@
         "psr-4": {
             "Nikiforov\\": "Nikiforov"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
     }
 }
